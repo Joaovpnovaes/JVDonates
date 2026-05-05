@@ -5,11 +5,14 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PaymentEntity } from './modules/payments/entities/payment.entity';
 import { OrderEntity } from './modules/orders/entities/order.entity';
+import { EntregaEntity } from './modules/donations/entities/entrega.entity';
 import { OrdersModule } from './modules/orders/orders.module';
+import { DonationsModule } from './modules/donations/donations.module';
 
 @Module({
   imports: [ConfigModule.forRoot({ isGlobal: true }),
     OrdersModule,
+    DonationsModule,
   TypeOrmModule.forRootAsync({
     inject: [ConfigService],
     useFactory: (configService: ConfigService) => ({
@@ -19,7 +22,7 @@ import { OrdersModule } from './modules/orders/orders.module';
       username: configService.get<string>('DB_USERNAME'),
       password: configService.get<string>('DB_PASSWORD'),
       database: configService.get<string>('DB_DATABASE'),
-      entities: [OrderEntity, PaymentEntity],
+      entities: [OrderEntity, PaymentEntity, EntregaEntity],
       synchronize: true,
     }),
   }),],

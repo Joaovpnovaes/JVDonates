@@ -1,0 +1,15 @@
+### Confirmar Saída (Doador)
+PATCH http://localhost:3000/api/v1/entregas/550e8400-e29b-41d4-a716-446655440000/saida
+Content-Type: application/json
+
+### Confirmar Chegada (ONG)
+PATCH http://localhost:3000/api/v1/entregas/550e8400-e29b-41d4-a716-446655440000/chegada
+Content-Type: application/json
+
+### Tentativa de confirmação duplicada (deve retornar erro 409)
+PATCH http://localhost:3000/api/v1/entregas/550e8400-e29b-41d4-a716-446655440001/saida
+Content-Type: application/json
+
+### Tentativa com ID inválido (deve retornar erro 404)
+PATCH http://localhost:3000/api/v1/entregas/550e8400-e29b-41d4-a716-000000000000/chegada
+Content-Type: application/json
