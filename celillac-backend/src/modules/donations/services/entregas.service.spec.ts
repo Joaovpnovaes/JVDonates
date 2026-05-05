@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { EntregasService } from './entregas.service';
 import { ENTREGAS_REPOSITORY } from '../repositories/entregas.repository.interface';
-import { EntregaNotFoundException } from 'src/common/donations/exceptions/entrega-not-found.exception';
+import { EntregaNotFoundException } from '../../../common/donations/exceptions/entrega-not-found.exception';
 import { EntregaAlreadyConfirmedException } from 'src/common/donations/exceptions/entrega-already-confirmed.exception';
 import { EntregaStatusEnum } from 'src/common/donations/enums/entrega-status.enum';
 import { EntregaEntity } from '../entities/entrega.entity';
