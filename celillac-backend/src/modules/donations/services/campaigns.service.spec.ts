@@ -2,10 +2,29 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { CampaignsService } from './campaigns.service';
 import { CAMPAIGNS_REPOSITORY } from '../repositories/campaigns.repository.interface';
 import { CreateCampaignDto } from '../dto/create-campaign.dto';
+import { CampaignStatusEnum } from '../../../common/donations/enums/campaign-status.enum';
 
 describe('CampaignsService', () => {
   let service: CampaignsService;
   let mockRepository;
+
+  // Test data factory
+  const createValidCampaignInput = (): CreateCampaignDto => ({
+    title: 'Campanha de Caridade 2026',
+    description: 'Uma campanha para arrecadar fundos destinados a pessoas necessitadas',
+    targetAmount: 10000.0,
+  });
+
+  const createExpectedCampaignOutput = (input: CreateCampaignDto) => ({
+    id: expect.any(String),
+    title: input.title,
+    description: input.description,
+    targetAmount: input.targetAmount,
+    currentAmount: 0,
+    status: CampaignStatusEnum.ACTIVE,
+    createdAt: expect.any(Date),
+    updatedAt: expect.any(Date),
+  });
 
   beforeEach(async () => {
     mockRepository = {
@@ -26,45 +45,33 @@ describe('CampaignsService', () => {
   });
 
   describe('create', () => {
-    it('Deve criar uma nova campanha com dados válidos (RED)', async () => {
+    it('should create an active donation campaign when valid data is provided', async () => {
       // Arrange
-      const createCampaignDto: CreateCampaignDto = {
-        title: 'Campanha de Caridade 2026',
-        description: 'Uma campanha para arrecadar fundos destinados a pessoas necessitadas',
-        targetAmount: 10000.0,
-      };
+      const input = createValidCampaignInput();
+      const expectedOutput = createExpectedCampaignOutput(input);
 
-      const mockSaveResult = {
-        id: expect.any(String), // Deve gerar um UUID
-        title: createCampaignDto.title,
-        description: createCampaignDto.description,
-        targetAmount: createCampaignDto.targetAmount,
-        currentAmount: 0,
-        status: 'active',
-        createdAt: expect.any(Date),
-        updatedAt: expect.any(Date),
-      };
-
-      mockRepository.save.mockResolvedValue(mockSaveResult);
+      mockRepository.save.mockResolvedValue(expectedOutput);
 
       // Act
-      const result = await service.create(createCampaignDto);
+      const result = await service.create(input);
 
       // Assert
       expect(result).toBeDefined();
-      expect(result.id).toBeDefined();
-      expect(result.title).toBe(createCampaignDto.title);
-      expect(result.description).toBe(createCampaignDto.description);
-      expect(result.targetAmount).toBe(createCampaignDto.targetAmount);
-      expect(result.currentAmount).toBe(0);
-      expect(result.status).toBe('active');
+      expect(result).toMatchObject({
+        id: expect.any(String),
+        title: input.title,
+        description: input.description,
+        targetAmount: input.targetAmount,
+        currentAmount: 0,
+        status: CampaignStatusEnum.ACTIVE,
+      });
       expect(mockRepository.save).toHaveBeenCalledWith(
         expect.objectContaining({
-          title: createCampaignDto.title,
-          description: createCampaignDto.description,
-          targetAmount: createCampaignDto.targetAmount,
+          title: input.title,
+          description: input.description,
+          targetAmount: input.targetAmount,
           currentAmount: 0,
-          status: 'active',
+          status: CampaignStatusEnum.ACTIVE,
         }),
       );
     });
