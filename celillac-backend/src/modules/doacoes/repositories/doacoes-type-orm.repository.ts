@@ -22,4 +22,8 @@ export class DoacoesTypeORMRepository implements DoacoesRepository {
   async save(doacao: DoacaoEntity): Promise<DoacaoEntity> {
     return this.repository.save(doacao);
   }
+
+  async remove(doacao: DoacaoEntity): Promise<DoacaoEntity> {
+    return this.repository.remove(doacao);
+  }
 }

@@ -75,6 +75,36 @@ export class DoacoesService {
     return this.mapToResponseDto(doacaoAtualizada);
   }
 
+  /**
+   * UCXX - Excluir Doação (DELETE)
+   * Exclusão física do banco de dados com base no ID.
+   * 
+   * Fluxo:
+   * 1. Busca registro (findById)
+   * 2. Lança colateral 404 se não encontrado (NotFoundException)
+   * 3. Executa deleção física (remove) do repositório/ORM
+   * 4. Retorna mensagem de sucesso (HTTP 200 OK via controller)
+   * 
+   * @param id Identificador da doação
+   * @returns Objeto com a mensagem de sucesso
+   * @throws NotFoundException se o registro for inexistente
+   */
+  async remove(id: string): Promise<{ message: string }> {
+    // 1. Buscamos o registro no banco
+    const doacaoExistente = await this.doacoesRepository.findById(id);
+
+    // 2. Comportamento rigoroso: se NÃO for encontrado, NotFoundException(404) 
+    if (!doacaoExistente) {
+      throw new NotFoundException('Doação não encontrada.');
+    }
+
+    // 3. Efetua a exclusão definitiva/física
+    await this.doacoesRepository.remove(doacaoExistente);
+
+    // 4. Retorno didático para a API
+    return { message: 'Doação removida com sucesso.' };
+  }
+
   private mapToResponseDto(doacao): ListarDoacoesResponseDto {
     return {
       id: doacao.id,

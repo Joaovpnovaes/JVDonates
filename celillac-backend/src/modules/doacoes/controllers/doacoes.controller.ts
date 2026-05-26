@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Patch, Body } from '@nestjs/common';
+import { Controller, Get, Param, Patch, Body, Delete } from '@nestjs/common';
 import { DoacoesService } from '../services/doacoes.service';
 import { ListarDoacoesResponseDto } from '../dto/listar-doacoes-response.dto';
 import { UpdateDoacaoDto } from '../dto/update-doacao.dto';
@@ -36,5 +36,19 @@ export class DoacoesController {
     @Body() updateDto: UpdateDoacaoDto,
   ): Promise<ListarDoacoesResponseDto> {
     return this.doacoesService.update(id, updateDto);
+  }
+
+  /**
+   * Operação DELETE do CRUD (Exclusão física)
+   * Apenas intercepta a requisição e delega execução para o service
+   * 
+   * @param id - Identificador extraído diretamente da rota
+   * @returns Confirmação de exclusão
+   */
+  @Delete(':id')
+  async removerDoacao(
+    @Param('id') id: string,
+  ): Promise<{ message: string }> {
+    return this.doacoesService.remove(id);
   }
 }
