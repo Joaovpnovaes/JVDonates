@@ -14,4 +14,12 @@ export class DoacoesTypeORMRepository implements DoacoesRepository {
   async findAll(): Promise<DoacaoEntity[]> {
     return this.repository.find();
   }
+
+  async findById(id: string): Promise<DoacaoEntity | null> {
+    return this.repository.findOne({ where: { id } });
+  }
+
+  async save(doacao: DoacaoEntity): Promise<DoacaoEntity> {
+    return this.repository.save(doacao);
+  }
 }

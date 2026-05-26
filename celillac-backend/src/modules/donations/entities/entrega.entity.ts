@@ -22,7 +22,7 @@ export class EntregaEntity {
   })
   status: EntregaStatusEnum;
 
-  @Column({ name: 'hash_blockchain', nullable: true })
+  @Column({ name: 'hash_blockchain', type: 'varchar', nullable: true })
   hashBlockchain: string | null;
 
   @CreateDateColumn({ name: 'created_at', default: () => 'CURRENT_TIMESTAMP' })
