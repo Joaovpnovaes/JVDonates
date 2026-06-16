@@ -1,0 +1,60 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: celillac-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: celillac
+      POSTGRES_PASSWORD: celillac
+      POSTGRES_DB: celillac_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ./celillac-backend
+      dockerfile: Dockerfile
+    container_name: celillac-backend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://celillac:celillac@postgres:5432/celillac_db
+      NODE_ENV: development
+    depends_on:
+      - postgres
+    volumes:
+      - ./celillac-backend:/app
+      - /app/node_modules
+    command: npm run start:dev
+    networks:
+      - celillac-network
+
+  frontend:
+    build:
+      context: ./celillac-frontend
+      dockerfile: Dockerfile
+    container_name: celillac-frontend
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_API_URL: http://backend:3000
+      NODE_ENV: development
+    volumes:
+      - ./celillac-frontend:/app
+      - /app/node_modules
+    command: pnpm dev -- --host
+    networks:
+      - celillac-network
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
+
+networks:
+  celillac-network:
+    driver: bridge

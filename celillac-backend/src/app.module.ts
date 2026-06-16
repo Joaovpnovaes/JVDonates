@@ -7,9 +7,11 @@ import { PaymentEntity } from './modules/payments/entities/payment.entity';
 import { OrderEntity } from './modules/orders/entities/order.entity';
 import { EntregaEntity } from './modules/donations/entities/entrega.entity';
 import { DoacaoEntity } from './modules/doacoes/entities/doacao.entity';
+import { UserEntity } from './modules/users/entities/user.entity';
 import { OrdersModule } from './modules/orders/orders.module';
 import { DonationsModule } from './modules/donations/donations.module';
 import { DoacoesModule } from './modules/doacoes/doacoes.module';
+import { UsersModule } from './modules/users/users.module';
 
 @Module({
   imports: [
@@ -17,6 +19,7 @@ import { DoacoesModule } from './modules/doacoes/doacoes.module';
     OrdersModule,
     DonationsModule,
     DoacoesModule,
+    UsersModule,
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
@@ -26,7 +29,7 @@ import { DoacoesModule } from './modules/doacoes/doacoes.module';
         username: configService.get<string>('DB_USERNAME'),
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_DATABASE'),
-        entities: [OrderEntity, PaymentEntity, EntregaEntity, DoacaoEntity],
+        entities: [OrderEntity, PaymentEntity, EntregaEntity, DoacaoEntity, UserEntity],
         synchronize: true,
       }),
     }),
