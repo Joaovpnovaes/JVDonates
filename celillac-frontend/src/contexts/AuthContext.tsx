@@ -55,13 +55,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       })
 
       if (!response.ok) {
-        const error = await response.json()
-        throw new Error(error.message || 'Login failed')
+        let error = await response.json()
+        throw new Error(error.message || `Login failed: ${response.statusText}`)
       }
 
       const { token, user: userData } = await response.json()
       localStorage.setItem('authToken', token)
       setUser(userData)
+    } catch (err) {
+      throw err
     } finally {
       setIsLoading(false)
     }
@@ -77,13 +79,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       })
 
       if (!response.ok) {
-        const error = await response.json()
-        throw new Error(error.message || 'Registration failed')
+        let error = await response.json()
+        throw new Error(error.message || `Registration failed: ${response.statusText}`)
       }
 
       const { token, user: userData } = await response.json()
       localStorage.setItem('authToken', token)
       setUser(userData)
+    } catch (err) {
+      throw err
     } finally {
       setIsLoading(false)
     }

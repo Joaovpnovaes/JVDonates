@@ -24,9 +24,13 @@ export const AuthModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
     setSuccess('')
     try {
       await login(email, password)
+      setEmail('')
+      setPassword('')
       onClose()
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Login failed')
+      const errorMessage = err instanceof Error ? err.message : 'Login failed'
+      setError(errorMessage)
+      console.error('Login error:', err)
     }
   }
 
@@ -47,9 +51,15 @@ export const AuthModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
 
     try {
       await register(name, email, password)
+      setName('')
+      setEmail('')
+      setPassword('')
+      setConfirmPassword('')
       onClose()
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Registration failed')
+      const errorMessage = err instanceof Error ? err.message : 'Registration failed'
+      setError(errorMessage)
+      console.error('Registration error:', err)
     }
   }
 
